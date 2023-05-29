@@ -32,61 +32,70 @@ df1=tips[~tips.duplicated()]
 df1
 ```
 ```
-sns.boxplot(x="day", y="total_bill", hue="smoker", data=tips, linewidth=2, 
-width=0.6, boxprops={"facecolor": "lightblue", "edgecolor": "darkblue"}, 
-whiskerprops={"color": "black", "linestyle": "--", "linewidth": 1.5 }, 
-capprops={"color": "black", "linestyle": "--", "linewidth": 1.5})
-```
-```
-avg_tip = tips.groupby('smoker')['tip'].mean()
-p1= plt.bar(avg_tip.index, avg_tip, label='Tip', width=0.4)
-plt.title('Average tip amount given by smokers and non-smokers')
+plt.figure(figsize=(8,8))
+plt.title("Data with outliers")
+tips.boxplot()
 plt.show()
 ```
 ```
-tips["tip_per"] = tips["tip"] / tips["total_bill"]
-sns.scatterplot(x="size", y="tip_per", data=tips)
+plt.figure(figsize=(8,8))
+cols = ['size','tip','total_bill']
+Q1 = tips[cols].quantile(0.25)
+Q3 = tips[cols].quantile(0.75)
+IQR = Q3 - Q1
+df = tips[~((tips[cols] < (Q1 - 1.5 * IQR)) |(tips[cols] > (Q3 + 1.5 * IQR))).any(axis=1)]
+plt.title("Dataset after removing outliers")
+df.boxplot()
+plt.show()
+```
+```
+sns.barplot(x="day", y="total_bill", data=tips)
+plt.title("Total Bill Amount by Day of Week")
+plt.show()
+```
+```
+sns.boxplot(x="smoker", y="tip", data=df)
+plt.title("Tip Amount by Smoking Status")
+plt.show()
+```
+```
+df["tip_pct"] = df["tip"] / df["total_bill"]
+sns.scatterplot(x="size", y="tip_pct", data=df)
 plt.title("Tip Percentage by Dining Party Size")
 plt.show()
 ```
 ```
-states=tips.loc[:,["sex","tip"]]
-states=states.groupby(by=["sex"]).sum().sort_values(by="tip")
-sns.barplot(x=states.index,y="tip",data=states)
-plt.xlabel=("Sex")
-plt.ylabel=("Tips")
+sns.boxplot(x="sex", y="tip", data=df)
+plt.title("Tip Amount by Gender")
 plt.show()
 ```
 ```
-sns.histplot(data=tips, x="total_bill", hue="day", element="step", 
-stat="density")
-plt.title("Distribution of Total Bill Amounts by Day of the week")
+sns.scatterplot(x="day", y="total_bill", data=df)
+plt.title("Total Bill Amount by Day of Week")
 plt.show()
 ```
 ```
-sns.relplot(data=tips,x=tips["time"],y=tips["total_bill"],hue="time")
-```
-```
-avg_total_bill = tips.groupby('size')['total_bill'].mean()
-p1 = plt.bar(avg_total_bill.index, avg_total_bill, label='Total Bill', width=0.4)
-plt.title('Average Total bill amount given by Dining Party Size')
+sns.histplot(data=df, x="total_bill", hue="time", element="step", stat="density")
+plt.title("Distribution of Total Bill Amounts by Time of Day")
 plt.show()
 ```
 ```
-sns.relplot(data=tips,x="day",y="tip",hue="day")
-```
-```
-s.barplot(x=tips['time'], y=tips['tip'])
-plt.xlabel=("Service")
-plt.ylabel=("Tips")
+sns.barplot(x="size", y="total_bill", data=df)
+plt.title("Average Total Bill Amount by Dining Party Size")
 plt.show()
 ```
 ```
-tips.corr()
-sns.heatmap(tips.corr(),annot=True)
+sns.boxplot(x="day", y="tip", data=df)
+plt.title("Tip Amount by Day of Week")
+plt.show()
 ```
 ```
-sns.scatterplot(x="total_bill", y="tip", data=tips)
+sns.violinplot(x="time", y="tip", data=df)
+plt.title("Tip Amount by Time of Day")
+plt.show()
+```
+```
+sns.scatterplot(x="total_bill", y="tip", data=df)
 plt.title("Correlation between Tip Amount and Total Bill Amount")
 plt.show()
 ```
@@ -98,20 +107,19 @@ plt.show()
 # ![Screenshot 2023-05-29 110103](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/07687ec4-1402-4876-86a1-42f6692155da)
 # ![Screenshot 2023-05-29 110135](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/2514e27b-796f-40e1-b3a6-cf314eac0230)
 # ![Screenshot 2023-05-29 110201](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/5e777372-43a0-43dc-a13a-59d37468d3f8)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/b5c3f31b-b7c7-4913-a865-61591794d9fe)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/d44a60e7-4ee6-451a-b66d-154f0c1e3ef1)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/a44b3084-58ab-4250-9ba9-77a44d7dc64f)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/9002f749-e257-421a-940d-09e16aaf00e0)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/3e31a7f9-1495-4920-8ab1-9ce71393d219)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/adeb2b7d-3f3d-4f9e-901f-d578431e6548)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/b0a28353-3bdb-4bba-9e8c-2c1286c3f2de)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/5d8f4b32-7be0-4df4-8173-92a81a340823)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/531b8f63-a270-48e5-b6e1-3139f2c9584d)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/d18598f3-ea2c-4809-b503-5358cb17f26e)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/39cde0a6-ef2d-47c5-a9de-ccc4f507c2bc)
-# ![Screenshot 2023-05-29 110744](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/34adef17-a71a-4acf-ab28-449f2024e1b9)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/bcd17f90-d71c-4c1e-b711-bf270b857d75)
-# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/aaccfa44-f622-4f33-b71a-39a0ffa3a1d2)
+# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/0f0fdb23-dbbe-4c77-8d8c-389b6696feed)
+# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/170011bd-1949-431c-bd62-66f2ef0ff65e)
+# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/9e86449b-4415-4092-8920-829fb2ccffbd)
+# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/47f6719a-7dd8-49e2-a85d-5ce8d184a0b3)
+# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/9fa55399-8ad0-47c2-ba7d-9beab3ee2ecc)
+# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/a85fce64-bc65-40e4-9800-820826ce70e6)
+# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/88e61547-d4f6-4ecf-8871-a3887e9522c0)
+# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/ec11db2a-3942-414a-9b16-4d599eeaa476)
+# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/307307b5-86d8-487b-8f1f-55f502f2cbd6)
+# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/11da5aa3-2cbc-4d56-8137-8562a7061751)
+# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/84aeefff-962e-4f40-9844-32d63efc2593)
+# ![image](https://github.com/Roselineb/Ex-08-Data-Visualization_1/assets/128909895/bb85635e-9cd5-4d19-a20b-6260aba01115)
+
 
 # Result:
 Hence,Data Visualization is applied on the complex dataset using libraries like Seaborn and Matplotlib successfully and the data is saved to file
